@@ -604,6 +604,7 @@ class qubo:
     def mean(self):
         """Compute mean of :math:`\\boldsymbol x^{\\top}Q\\boldsymbol x`.
         Assumes :math:`\\boldsymbol x` is sampled from a uniform distribution.
+        See `[1] <https://arxiv.org/abs/2504.12419>`__ for details.
 
         Returns:
             float: Mean of the QUBO's energy values.
@@ -614,6 +615,7 @@ class qubo:
     def variance(self):
         """Compute variance of :math:`\\boldsymbol x^{\\top}Q\\boldsymbol x`.
         Assumes :math:`\\boldsymbol x` is sampled from a uniform distribution.
+        See `[1] <https://arxiv.org/abs/2504.12419>`__ for details.
 
         Returns:
             float: Variance of the QUBO's energy values.
