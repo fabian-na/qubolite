@@ -601,6 +601,42 @@ class qubo:
         """
         return qubo(self.m*factor)
 
+    def mean(self):
+        """Compute mean of :math:`\\boldsymbol x^{\\top}Q\\boldsymbol x`.
+        Assumes :math:`\\boldsymbol x` is sampled from a uniform distribution.
+        See `[1] <https://arxiv.org/abs/2504.12419>`__ for details.
+
+        Returns:
+            float: Mean of the QUBO's energy values.
+                Assumes solutions are sampled from a uniform distribution.
+        """
+        return (self.m.sum() / 4) + (self.m.diagonal().sum() / 4)
+
+    def variance(self):
+        """Compute variance of :math:`\\boldsymbol x^{\\top}Q\\boldsymbol x`.
+        Assumes :math:`\\boldsymbol x` is sampled from a uniform distribution.
+        See `[1] <https://arxiv.org/abs/2504.12419>`__ for details.
+
+        Returns:
+            float: Variance of the QUBO's energy values.
+                Assumes solutions are sampled from a uniform distribution.
+        """
+        v = 0
+        m2 =self.m**2
+        # sum over Q[i,j] * (Q[i,j] + Q[j,i])
+        v += m2.sum() - m2.diagonal().sum()
+        col_sums =self.m.sum(axis=0)
+        row_sums =self.m.sum(axis=1)
+        # sum over Q[i,j] * Q[k,i]
+        v += np.sum(row_sums * col_sums)
+        # sum over Q[i,j] * Q[i,k]
+        v += np.sum(row_sums * row_sums)
+        # sum over Q[i,j] * Q[k,j]
+        v += np.sum(col_sums * col_sums)
+        # sum over Q[i,j] * Q[j,k]
+        v += np.sum(col_sums * row_sums)
+        return v / 16
+
     def as_int(self, bits=32):
         """Scales and rounds the QUBO parameters to fit a given number of bits.
         The number format is assumed to be signed integer, therefore ``b`` bits
